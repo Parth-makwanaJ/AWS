@@ -14,18 +14,45 @@ app.listen(PORT, APPURL, () => {
    console.log(`app is running on port http://${APPURL}:${PORT}`);
 });
 
-app.get('/upload', (req, res)=>{
+
+const spacesEndpoint = new AWS.Endpoint(process.env.SPACESENDPOINT);
+const s3 = new AWS.S3({
+  endpoint: spacesEndpoint,
+  accessKeyId: process.env.ACCESSKEYID,
+  secretAccessKey: process.env.SECRETACCESSKEY
+});
+
+// Define an API route to list all files in the bucket
+app.get('/files', (req, res) => {
+  const params = {
+    Bucket: process.env.BUCKET
+  };
+
+  s3.listObjectsV2(params, (err, data) => {
+    if (err) {
+      console.error("Error listing objects: ", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      const fileList = data.Contents.map(item => item.Key);
+      res.json(fileList);
+    }
+  });
+});
+
+
+
+// app.get('/upload', (req, res)=>{
    
-});
+// });
 
-AWS.config.update({
-    region: '<your-region>',
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-});
+// AWS.config.update({
+//     region: '<your-region>',
+//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+// });
 
-// Create a new instance of the S3 class
-const s3 = new AWS.S3();
+// // Create a new instance of the S3 class
+// const s3 = new AWS.S3();
 
 
 
