@@ -4,83 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        /* CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #232f3e; /* AWS blue color */
+        }
+
+        .container {
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin-left: 10px;
+            color: #232f3e; /* AWS blue color */
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <style>
-        /* public/style.css */
+    <div class="container">
+        <div class="header">
+            <img src="../icons/AWS.svg" alt="AWS Logo" style="width: 100px;"> <!-- Adjust size as needed -->
+            
+        </div>
+        <form action="/login" method="POST">
+            <label for="accessKeyId"><b>Access Key ID:</b></label>
+            <input type="text" id="accessKeyId" name="accessKeyId" required><br>
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 25px;
-    margin-top: 0;
-    margin-bottom: 30px;
-    margin-left: 30%;
-    margin-right: 30%;
-    padding: 25px;
-    background-color: #f4f4f4;
-}
+            <label for="secretAccessKey"><b>Secret Access Key:</b></label>
+            <input type="text" id="secretAccessKey" name="secretAccessKey" required><br>
 
-.container {
-    width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+            <label for="spaceEndPoint"><b>Space Endpoint:</b></label>
+            <input type="text" id="spaceEndPoint" name="spaceEndPoint" required><br>
 
-h1 {
-    text-align: center;
-}
+            <label for="bucketName"><b>Bucket Name:</b></label>
+            <input type="text" id="bucketName" name="bucketName" required><br>
 
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    margin-bottom: 5px;
-}
-
-input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-    </style>
-    <h1>Login to AWS</h1>
-    <form action="/login" method="POST">
-        <label for="accessKeyId">Access Key ID:</label>
-        <input type="text" id="accessKeyId" name="accessKeyId" required><br>
-
-        <label for="secretAccessKey">Secret Access Key:</label>
-        <input type="text" id="secretAccessKey" name="secretAccessKey" required><br>
-
-        <label for="spaceEndPoint">Space Endpoint:</label>
-        <input type="text" id="spaceEndPoint" name="spaceEndPoint" required><br>
-
-        <label for="bucketName">Bucket Name:</label>
-        <input type="text" id="bucketName" name="bucketName" required><br>
-
-        <button type="submit">Login</button>
-    </form>
+            <button type="submit">Login</button>
+        </form>
+    </div>
 </body>
 </html>

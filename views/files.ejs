@@ -5,80 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>File Details</title>
     <style>
+      /* CSS styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #232f3e; /* Dark blue background */
+        color: #232f3e; /* White text color */
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        color: #232f3e; /* Dark blue text color */
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #fff; /* White text color */
+      }
+
       ul {
         list-style-type: none;
         padding: 0;
         display: grid;
-        grid-template-columns: repeat(2, 1fr); /* Two columns */
+        grid-template-columns: repeat(
+          auto-fit,
+          minmax(250px, 1fr)
+        ); /* Responsive grid */
         gap: 20px; /* Gap between columns */
       }
+
       li {
-        border: 1px solid #ddd; /* Border around each file details */
-        border-radius: 5px; /* Border radius */
-        padding: 10px; /* Padding for file details */
+        border: 1px solid #fff; /* White border around each file details */
+        border-radius: 8px; /* Border radius */
+        padding: 20px; /* Padding for file details */
+        background-color: #fff; /* White background */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow */
+        color: #232f3e; /* Dark blue text color */
       }
-      img {
-        width: 100px; /* Adjust the width as needed */
-        height: 100px; /* Adjust the height as needed */
-        object-fit: cover; /* Ensures the image covers the entire space */
-        border: 1px solid #ddd; /* Add a border for better visibility */
-        border-radius: 5px; /* Add border radius for rounded corners */
+
+      .image-class {
+        width: 100%; /* Make image fill its container */
+        height: 125px; /* Maintain aspect ratio */
+        border-radius: 4px; /* Add border radius */
         margin-bottom: 10px; /* Add margin below the image */
       }
+
       h3 {
         margin-top: 20px;
       }
 
-      #uploadButton {
-        display: block;
-        margin-top: 10px;
-        padding: 8px 16px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      #uploadButton:hover {
-        background-color: #0056b3;
-      }
-
-      /* Adjust styling for file details */
-      ul {
-        margin-top: 20px; /* Add some space above the file list */
-      }
-
-      /* Add some margin below each file item */
-      li {
-        margin-bottom: 20px;
-      }
-
-      /* Style the remove button */
-      .removeButton {
-        background-color: #dc3545;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        padding: 6px 12px;
-        cursor: pointer;
-      }
-
-      .removeButton:hover {
-        background-color: #a10e1c;
-      }
-
+      .removeButton,
       .DownloadButton {
-        background-color: #0195b9;
-        color: #fff;
+        display: block;
+        width: 100%;
+        padding: 8px 16px;
+        margin-top: 10px;
         border: none;
-        border-radius: 5px;
-        padding: 6px 12px;
+        border-radius: 4px;
         cursor: pointer;
+        text-align: center;
+        background-color: #007bff; /* Blue color for buttons */
+        color: #fff; /* White text color */
+        transition: background-color 0.3s; /* Smooth transition on hover */
       }
 
+      .removeButton:hover,
       .DownloadButton:hover {
-        background-color: #50bdd8;
+        background-color: #0056b3; /* Darker blue color on hover */
+      }
+      .testing {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #fff; /* White text color */
+        justify-content: center;
+        align-items: center;
+      }
+      .logo{
+        width: 100%; /* Make image fill its container */
+        height: 90%; /* Maintain aspect ratio */
+        border-radius: 4px; /* Add border radius */
       }
     </style>
     <link
@@ -86,17 +98,33 @@
       rel="stylesheet"
     />
   </head>
-  <body style="margin: 10px">
-    <h1><a href="/folders"> List of Folders</a></h1>
+  <body style="margin: 10px; background-color: #232f3e">
+    <h1>
+      <a
+        style="
+          color: #232f3e;
+          background-color: #fff;
+          border-radius: 10px;
+          padding-left: 10px;
+          padding-right: 10px;
+        "
+        href="/folders"
+      >
+        List of Folders
+        <img class="logo" src="../icons/AWS.svg" alt="AWS Logo" style="width: 70px" />
+      </a>
+    </h1>
 
-    <button
-      type="button"
-      class="btn btn-primary mb-2"
-      data-toggle="modal"
-      data-target="#uploadModal"
-    >
-      Upload Image
-    </button>
+    <div class="testing">
+      <button
+        type="button"
+        class="btn btn-primary mb-2"
+        data-toggle="modal"
+        data-target="#uploadModal"
+      >
+        Upload Image
+      </button>
+    </div>
 
     <!-- Bootstrap Modal -->
     <div
@@ -155,36 +183,42 @@
         </div>
       </div>
     </div>
-    <ul id="fileList">
-      <% files.forEach(function(file) { %>
-      <li>
-        <% var fileExtension = file.Key.split('.').pop().toLowerCase(); %> <% if
-        (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) { %>
-        <img src="<%= file.DownloadUrl %>" alt="File Image" loading="lazy" />
-        <% } else { %>
-        <!-- Use icons for other file types -->
-        <% if (fileExtension === 'pdf') { %>
-        <img src="../icons/pdf.svg" alt="PDF Icon" loading="lazy" />
-        <% } else if (fileExtension === 'doc' || fileExtension === 'docx') { %>
-        <img src="../icons/doc.svg" alt="Document Icon" loading="lazy" />
-        <% } else if (fileExtension === 'mp4' || fileExtension === 'mp4') { %>
-        <img src="../icons/mp4.svg" alt="Document Icon" loading="lazy" />
-        <% } else if (fileExtension === 'xls' || fileExtension === 'xlsx') { %>
-        <img src="../icons/xls.svg" alt="Spreadsheet Icon" loading="lazy" />
-        <% } else if (fileExtension === 'exe') { %>
-        <img src="../icons/exe.svg" alt="Executable Icon" loading="lazy" />
-        <% } else { %>
-        <img src="../icons/default.svg" alt="Default Icon" loading="lazy" />
-        <% } %> <% } %>
-        <p><strong>File Name:</strong> <%= file.Key %></p>
-        <p><strong>Last Modified:</strong> <%= file.LastModified %></p>
-        <p><strong>Size:</strong> <%= file.Size %></p>
-        <a class="DownloadButton" href="<%= file.DownloadUrl %>">Download</a>
-        <button class="removeButton" data-key="<%= file.Key %>">Remove</button>
-      </li>
-      <% }); %>
-    </ul>
-
+    <div class="container">
+      <ul id="fileList">
+        <!-- <h1>File Details</h1> -->
+        <% files.forEach(function(file) { %>
+        <li>
+          <% var fileExtension = file.Key.split('.').pop().toLowerCase(); %> <%
+          if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) { %>
+          <img class="image-class" src="<%= file.DownloadUrl %>" alt="File Image" loading="lazy" />
+          <% } else { %>
+          <!-- Use icons for other file types -->
+          <% if (fileExtension === 'pdf') { %>
+          <img class="image-class" src="../icons/pdf.svg" alt="PDF Icon" loading="lazy" />
+          <% } else if (fileExtension === 'doc' || fileExtension === 'docx') {
+          %>
+          <img class="image-class" src="../icons/doc.svg" alt="Document Icon" loading="lazy" />
+          <% } else if (fileExtension === 'mp4' || fileExtension === 'mp4') { %>
+          <img class="image-class" src="../icons/mp4.svg" alt="Document Icon" loading="lazy" />
+          <% } else if (fileExtension === 'xls' || fileExtension === 'xlsx') {
+          %>
+          <img class="image-class" src="../icons/xls.svg" alt="Spreadsheet Icon" loading="lazy" />
+          <% } else if (fileExtension === 'exe') { %>
+          <img class="image-class" src="../icons/exe.svg" alt="Executable Icon" loading="lazy" />
+          <% } else { %>
+          <img class="image-class" src="../icons/default.svg" alt="Default Icon" loading="lazy" />
+          <% } %> <% } %>
+          <p><strong>File Name:</strong> <%= file.Key %></p>
+          <p><strong>Last Modified:</strong> <%= file.LastModified %></p>
+          <p><strong>Size:</strong> <%= file.Size %></p>
+          <a class="DownloadButton" href="<%= file.DownloadUrl %>">Download</a>
+          <button class="removeButton" data-key="<%= file.Key %>">
+            Remove
+          </button>
+        </li>
+        <% }); %>
+      </ul>
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
