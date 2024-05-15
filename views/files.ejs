@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Details</title>
+    <style>
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns */
+            gap: 20px; /* Gap between columns */
+        }
+        li {
+            border: 1px solid #ddd; /* Border around each file details */
+            border-radius: 5px; /* Border radius */
+            padding: 10px; /* Padding for file details */
+        }
+        img {
+            width: 100px; /* Adjust the width as needed */
+            height: 100px; /* Adjust the height as needed */
+            object-fit: cover; /* Ensures the image covers the entire space */
+            border: 1px solid #ddd; /* Add a border for better visibility */
+            border-radius: 5px; /* Add border radius for rounded corners */
+            margin-bottom: 10px; /* Add margin below the image */
+        }
+        h3 {
+    margin-top: 20px;
+}
+
+#uploadButton {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#uploadButton:hover {
+    background-color: #0056b3;
+}
+
+/* Adjust styling for file details */
+ul {
+    margin-top: 20px; /* Add some space above the file list */
+}
+
+/* Add some margin below each file item */
+li {
+    margin-bottom: 20px;
+}
+
+/* Style the remove button */
+.removeButton {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.removeButton:hover {
+    background-color: #a10e1c;
+}
+
+.DownloadButton{
+    background-color: #0195b9;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.DownloadButton:hover {
+    background-color: #50bdd8;
+}
+
+    </style>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="margin: 10px;">
+    <h1><a href="/"> List of Folders</a></h1>
+   
+
+    <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#uploadModal">
+        Upload Image
+    </button>
+
+    <!-- Bootstrap Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Upload form -->
+                    <input type="text" id="folderName" placeholder="Enter folder name" class="form-control mb-2">
+                    <input type="file" id="fileInput" accept="image/*" class="form-control-file mb-2">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="uploadButtonModal">Upload File</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul id="fileList">
+        <% files.forEach(function(file) { %>
+            <li>
+                <% var fileExtension = file.Key.split('.').pop().toLowerCase(); %>
+                <% if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) { %>
+                    <img src="<%= file.DownloadUrl %>" alt="File Image" loading="lazy">
+                <% } else { %>
+                    <!-- Use icons for other file types -->
+                    <% if (fileExtension === 'pdf') { %>
+                        <img src="../icons/pdf.svg" alt="PDF Icon" loading="lazy">
+                    <% } else if (fileExtension === 'doc' || fileExtension === 'docx') { %>
+                        <img src="../icons/doc.svg" alt="Document Icon" loading="lazy">
+                    <% } else if (fileExtension === 'mp4' || fileExtension === 'mp4') { %>
+                        <img src="../icons/mp4.svg" alt="Document Icon" loading="lazy">
+                    <% } else if (fileExtension === 'xls' || fileExtension === 'xlsx') { %>
+                        <img src="../icons/xls.svg" alt="Spreadsheet Icon" loading="lazy">
+                    <% } else if (fileExtension === 'exe') { %>
+                        <img src="../icons/exe.svg" alt="Executable Icon" loading="lazy">
+                    <% } else { %>
+                        <img src="../icons/default.svg" alt="Default Icon" loading="lazy">
+                    <% } %>
+                <% } %>
+                <p><strong>File Name:</strong> <%= file.Key %></p>
+                <p><strong>Last Modified:</strong> <%= file.LastModified %></p>
+                <p><strong>Size:</strong> <%= file.Size %></p>
+                <a class="DownloadButton" href="<%= file.DownloadUrl %>">Download</a>
+                <button class="removeButton" data-key="<%= file.Key %>">Remove</button>
+            </li>
+        <% }); %>
+    </ul>
+    
+    
+
+ <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <script>
+        document.getElementById('uploadModal').addEventListener('click', function() {
+            var input = document.getElementById('fileInput');
+            input.onchange = function(event) {
+                var file = event.target.files[0];
+                var folderName = document.getElementById('folderName').value;
+                if (!folderName.trim()) {
+                    alert('Please enter a folder name');
+                    return;
+                }
+                if (file) {
+                    uploadFile(file, folderName);
+                }
+            };
+        });
+
+        function uploadFile(file, folderName) {
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('folderName', folderName);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('File uploaded successfully');
+                    location.reload(); // Reload the page to update the file list
+                } else {
+                    console.error('Error uploading file');
+                }
+            })
+            .catch(error => {
+                console.error('Error uploading file:', error);
+            });
+        }
+
+        document.querySelectorAll('.removeButton').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var key = this.getAttribute('data-key');
+                if (confirm('Are you sure you want to remove this file?')) {
+                    removeFile(key);
+                }
+            });
+        });
+
+        function removeFile(key) {
+            fetch('/remove', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ key: key })
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('File removed successfully');
+                    location.reload(); // Reload the page to update the file list
+                } else {
+                    console.error('Error removing file');
+                }
+            })
+            .catch(error => {
+                console.error('Error removing file:', error);
+            });
+        }
+    </script>
+</body>
+</html>
