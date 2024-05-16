@@ -140,6 +140,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
     Bucket: process.env.BUCKET,
     Key: key,
     Body: file.buffer,
+    ACL: 'public-read'
   };
 
   s3.upload(params, (err, data) => {
